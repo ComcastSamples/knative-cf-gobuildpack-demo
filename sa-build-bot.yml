@@ -1,0 +1,7 @@
+ apiVersion: v1
+ kind: ServiceAccount
+ metadata:
+   name: sa-build-bot
+   namespace: knative-cf-gobuildpack-domain
+ secrets:
+ - name: basic-user-pass

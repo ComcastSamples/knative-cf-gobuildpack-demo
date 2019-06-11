@@ -1,0 +1,31 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: knative-cf-gobuildpack-demo
+  namespace: knative-cf-gobuildpack-domain
+spec:
+  runLatest:
+    configuration:
+      build:
+        serviceAccountName: sa-build-bot
+        source:
+          git:
+            url: https://github.com/ComcastSamples/knative-cf-gobuildpack-demo.git
+            revision: master
+        template:
+          name: buildpacks-cloudfoundry
+          env:
+          - name: GOPACKAGENAME
+            value: "knative-cf-gobuildpack-demo"
+          arguments:
+          - name: IMAGE
+            value: docker.io/<docker-acct>/knative-cf-gobuildpack-demo:latest
+          - name: BUILDPACK_ORDER
+            value: https://github.com/cloudfoundry/go-buildpack.git
+          - name: SKIP_DETECT
+            value: "true"
+      revisionTemplate:
+        spec:
+          container:
+            image: docker.io/<docker-acct>/knative-cf-gobuildpack-demo:latest
+            imagePullPolicy: Always
